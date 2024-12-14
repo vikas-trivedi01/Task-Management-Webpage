@@ -1,0 +1,164 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  font-family: Arial, sans-serif;
+  background-color: #a9ecfd8b;
+  padding: 2rem;
+  color: rgb(6, 3, 3);
+}
+.container {
+  background-color: #fff;
+  padding: 2rem;
+  border: 2px solid beige;
+  border-radius: 8px;
+  width: 80%;
+  margin-left: 10%;
+  box-shadow: 0 4px 8px rgba(218, 69, 69, 0.5);
+}
+h1 {
+  text-align: center;
+  color: #333;
+}
+#task-list,#pinned-list {
+  gap: 1rem;
+  padding: 25px;
+  width: 225%;
+  color: black;
+  display: flex;
+}
+
+.tasks {
+  margin-top: 2rem;
+}
+.task-item {
+  background-color: #fe7a71;
+  padding: 20px 20px;
+  margin-bottom: 10px;
+  border-radius: 3px;
+  border: 1px solid #ddd;
+  color: #dddde5;
+  width: 100%;
+}
+.completed {
+  background-color: #439e8c !important;
+  text-decoration: line-through;
+}
+.add {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+.task-form button {
+  background-color: #007bff;
+  color: rgb(217, 218, 208);
+  padding: 5px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  font-size: 16px;
+}
+.task-form button:hover {
+  background: #0056b3;
+}
+.add:hover {
+  opacity: 0.8;
+}
+.task-form input[type="text"],
+.task-form input[type="date"],
+.task-form select {
+  width: 100%;
+  padding: 0.5rem;
+  margin-bottom: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  box-sizing: border-box;
+  font-size: 1rem;
+}
+#pinned-list {
+  display: flex;
+  padding: 25px;
+  gap: 40px;
+  width: 225%;
+}
+h1 {
+  color: #564caf;
+}
+.buttons {
+  display: flex;
+  width: 200px;
+  justify-content: center;
+  gap: 10px;
+  padding: 12px;
+  flex-wrap: wrap;
+}
+.btn {
+  background-color: #0e1e0e;
+  color: rgb(217, 218, 208);
+  padding: 5px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 16px;
+}
+.hide {
+  display: none;
+}
+.show {
+  display: block;
+}
+#mark_cmp:hover {
+  background-color: rgb(140, 240, 25);
+  border-radius: 10px;
+  color: rgb(18, 14, 14);
+  transition: 0.7s;
+}
+#delete:hover {
+  background-color: #e7311d;
+  border-radius: 10px;
+  color: rgb(18, 14, 14);
+  transition: 0.7s;
+}
+#edit:hover {
+  background-color: rgb(58, 172, 238);
+  border-radius: 10px;
+  color: rgb(18, 14, 14);
+  transition: 0.7s;
+}
+.pin {
+  position: relative;
+  top: 20px;
+  left: 90%;
+  color: #0a0b09;
+  background: #f5f4f2;
+  border: none;
+  font-size: medium;
+  padding: 0.5rem;
+}
+.pin:hover {
+  transform: scale(1.5);
+  transition: 1s;
+  border-radius: 10px;
+}
+.task_info {
+  padding: 25px;
+  border-radius: 12px;
+  background: rgb(169, 90, 181);
+  background: linear-gradient(
+    30deg,
+    rgb(244, 131, 154) 46%,
+    rgba(37, 197, 192, 1) 92%
+  );
+}
+#message{
+  font-size:x-large;
+  background-color: rgb(128, 240, 133);
+  border-radius: 10px;
+  color:black;
+  width: 35%;
+  padding: 17px 38px;
+  margin-left: 33%;
+}
