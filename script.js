@@ -43,6 +43,9 @@ function addTask(e) {
 function displayTasks() {
   const pinList = document.getElementById("pinned-list");
   const taskList = document.getElementById("task-list");
+  pinList.style.display = "none";
+  document.getElementById("pinned-text").style.display = "none";
+  pinListNotShown = true;
 
   pinList.innerHTML = "";
   taskList.innerHTML = "";
@@ -74,9 +77,14 @@ function displayTasks() {
     task_info.className = "task_info";
 
     if (task.isPinned) {
-      task_info.appendChild(task_elem);
-      task_info.appendChild(tasks_buttons);
-      pinList.appendChild(task_info);
+      if(pinListNotShown) {
+        pinList.style.display = "block";
+        document.getElementById("pinned-text").style.display = "block";
+        pinListNotShown = false;
+        task_info.appendChild(task_elem);
+        task_info.appendChild(tasks_buttons);
+        pinList.appendChild(task_info);
+      }
     } else {
       task_info.appendChild(pin_icon);
       task_info.appendChild(task_elem);
@@ -127,7 +135,7 @@ function pinTask(index) {
   setTimeout(() => {
     msgDiv.className = "hide";
     msg.remove();
-  }, 3000);
+  }, 2000);
 
   displayTasks();
   saveTasksDebounced();

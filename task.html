@@ -5,12 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Task Management Webpage</title>
     <link rel="stylesheet" href="style.css" />
-    
+
     <!-- get font-awesome cdn -->
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
-   /> 
+    />
   </head>
 
   <body>
@@ -33,18 +33,19 @@
         </select>
 
         <button type="submit">Add Task</button>
-
       </form>
     </div>
     <br />
-    <hr />
-    <br />
 
     <div class="tasks" id="display">
-      <center><h2 style="display: block">Pinned Tasks</h2></center>
       <br />
 
-      <div id="pinned-list"></div>
+      <center><h2 id="pinned-text">Pinned Tasks</h2></center>
+      <div id="pinned-list">
+        <hr />
+        <br />
+      </div>
+
       <br />
       <hr />
       <br />
@@ -53,10 +54,9 @@
       <br />
 
       <div id="message" class="hide"></div>
-      <div id="task-list"></div> 
-
+      <div id="task-list"></div>
     </div>
-    
+
     <script src="script.js"></script>
   </body>
 </html>

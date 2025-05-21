@@ -5,9 +5,9 @@
 }
 body {
   font-family: Arial, sans-serif;
-  background-color: #a9ecfd8b;
+  background-color: #000000;
   padding: 2rem;
-  color: rgb(6, 3, 3);
+  color: rgb(255, 255, 255);
 }
 .container {
   background-color: #fff;
@@ -33,15 +33,31 @@ h1 {
 .tasks {
   margin-top: 2rem;
 }
-.task-item {
-  background-color: #fe7a71;
-  padding: 20px 20px;
-  margin-bottom: 10px;
-  border-radius: 3px;
-  border: 1px solid #ddd;
-  color: #dddde5;
-  width: 100%;
+.task_info {
+  padding: 20px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #7fbfff, #00000062);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease-in-out;
+  margin-bottom: 20px;
 }
+
+#pinned-list .task_info {
+  width: 235px;
+}
+
+.task-item {
+  background-color: #ffffff;
+  padding: 16px 20px;
+  margin-bottom: 12px;
+  border-radius: 8px;
+  border: 1px solid #dcdfe3;
+  color: #333;
+  font-size: 15px;
+  line-height: 1.6;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
 .completed {
   background-color: #439e8c !important;
   text-decoration: line-through;
@@ -132,26 +148,17 @@ h1 {
   position: relative;
   top: 20px;
   left: 90%;
-  color: #0a0b09;
-  background: #f5f4f2;
-  border: none;
+  color: #ffffff;
+  background: #000000;
   font-size: medium;
   padding: 0.5rem;
+  border: 2px solid black;
+  border-radius: 12px;
 }
 .pin:hover {
   transform: scale(1.5);
   transition: 1s;
   border-radius: 10px;
-}
-.task_info {
-  padding: 25px;
-  border-radius: 12px;
-  background: rgb(169, 90, 181);
-  background: linear-gradient(
-    30deg,
-    rgb(244, 131, 154) 46%,
-    rgba(37, 197, 192, 1) 92%
-  );
 }
 #message{
   font-size:x-large;
