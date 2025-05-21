@@ -1,7 +1,15 @@
 let tasks = [];
 
-//on submission of form call the addTask to add the task
-document.getElementById("task-form").addEventListener("submit", addTask);
+window.onload = () => {
+  loadTasks();
+  updateDisplayVisibility();
+  document.getElementById("task-form").addEventListener("submit", addTask);
+};
+
+function updateDisplayVisibility() {
+  const displayElem = document.getElementById("display");
+  displayElem.style.display = tasks.length > 0 ? "block" : "none";
+}
 
 function addTask(e) {
   e.preventDefault();
@@ -14,7 +22,7 @@ function addTask(e) {
     alert("Please enter both description and due date.");
     return;
   }
-  //push the task object in tasks array
+
   tasks.push({
     description: taskDescription,
     due_date: taskDue,
@@ -22,14 +30,14 @@ function addTask(e) {
     isCompleted: false,
     isPinned: false,
   });
-  //empty the fields
+
   document.getElementById("description").value = "";
   document.getElementById("due-date").value = "";
   document.getElementById("priority").value = "Low";
 
-  //display and save tasks to localstorage
   displayTasks();
   saveTasksDebounced();
+  updateDisplayVisibility();
 }
 
 function displayTasks() {
@@ -40,31 +48,27 @@ function displayTasks() {
   taskList.innerHTML = "";
 
   tasks.forEach((task, index) => {
-    //create necessary elements
     const task_elem = document.createElement("div");
     const tasks_buttons = document.createElement("div");
     const task_info = document.createElement("div");
     const pin_icon = document.createElement("span");
     const pinButton = document.createElement("button");
 
-    //add pin icon
     pinButton.innerHTML = `<i class="fas fa-thumbtack"></i>`;
     pinButton.className = "pin";
-
     pinButton.addEventListener("click", () => pinTask(index));
     pin_icon.appendChild(pinButton);
 
     task_elem.className = task.isCompleted ? "task-item completed" : "task-item";
     task_elem.innerHTML = `
-            Task: ${task.description}<br>
-            Due Date: ${task.due_date}<br>
-            Priority: ${task.priority}<br> `;
+      Task: ${task.description}<br>
+      Due Date: ${task.due_date}<br>
+      Priority: ${task.priority}<br>`;
 
     tasks_buttons.innerHTML = `
-            <button id="delete" class="btn" onclick="deleteTask(${index})">Delete</button><br>
-            <button id="edit" class="${task.isCompleted ? 'hide' : 'btn'}" onclick="editTask(${index})">Edit</button><br>
-            <button id="mark_cmp" class="${task.isCompleted ? 'hide' : 'hov btn'}" onclick="completeTask(${index})">Mark Complete</button>
-            `;
+      <button id="delete" class="btn" onclick="deleteTask(${index})">Delete</button><br>
+      <button id="edit" class="${task.isCompleted ? 'hide' : 'btn'}" onclick="editTask(${index})">Edit</button><br>
+      <button id="mark_cmp" class="${task.isCompleted ? 'hide' : 'hov btn'}" onclick="completeTask(${index})">Mark Complete</button>`;
 
     tasks_buttons.className = "buttons";
     task_info.className = "task_info";
@@ -72,23 +76,21 @@ function displayTasks() {
     if (task.isPinned) {
       task_info.appendChild(task_elem);
       task_info.appendChild(tasks_buttons);
-
       pinList.appendChild(task_info);
     } else {
       task_info.appendChild(pin_icon);
       task_info.appendChild(task_elem);
       task_info.appendChild(tasks_buttons);
-
       taskList.appendChild(task_info);
     }
-
   });
 }
 
 function deleteTask(index) {
-  tasks.splice(index, 1);//remove task from index
+  tasks.splice(index, 1);
   displayTasks();
   saveTasksDebounced();
+  updateDisplayVisibility();
 }
 
 function completeTask(index) {
@@ -99,19 +101,9 @@ function completeTask(index) {
 }
 
 function editTask(index) {
-  //provide editing options
-  const newDescription = prompt(
-    "Enter new task description",
-    tasks[index].description
-  );
-  const newDate = prompt(
-    "Enter new task due date",
-    tasks[index].due_date
-  );
-  const newPriority = prompt(
-    "Enter new task priority",
-    tasks[index].priority
-  );
+  const newDescription = prompt("Enter new task description", tasks[index].description);
+  const newDate = prompt("Enter new task due date", tasks[index].due_date);
+  const newPriority = prompt("Enter new task priority", tasks[index].priority);
 
   if (newDescription && newDate && newPriority) {
     tasks[index].description = newDescription;
@@ -125,43 +117,49 @@ function editTask(index) {
 function pinTask(index) {
   tasks[index].isPinned = !tasks[index].isPinned;
 
-  let msgDiv = document.getElementById("message");
-  let msg = document.createElement('p');
+  const msgDiv = document.getElementById("message");
+  const msg = document.createElement("p");
 
-  msg.innerHTML = 'Task Pinned Successfully! &checkmark;';
+  msg.innerHTML = "Task Pinned Successfully! &checkmark;";
   msgDiv.appendChild(msg);
-  msgDiv.className='show';
-  setTimeout(() =>  msgDiv.className='hide', 3000);
+  msgDiv.className = "show";
+
+  setTimeout(() => {
+    msgDiv.className = "hide";
+    msg.remove();
+  }, 3000);
 
   displayTasks();
   saveTasksDebounced();
 }
 
 function saveTasks() {
-  localStorage.setItem("tasks", JSON.stringify(tasks));//store tasks to localstorage
+  localStorage.setItem("tasks", JSON.stringify(tasks));
 }
 
-// Debounce saveTasks function
-function debounce(func,delay){
+function debounce(func, delay) {
   let timer;
-
-  return function(...args){
+  return function (...args) {
     clearTimeout(timer);
-    timer = setTimeout(()=>func(...args),delay);
+    timer = setTimeout(() => func(...args), delay);
   };
 }
-const saveTasksDebounced = debounce(saveTasks, 1000); 
+
+const saveTasksDebounced = debounce(saveTasks, 1000);
 
 function loadTasks() {
   try {
-    const storedTasks = localStorage.getItem("tasks");//fetch tasks from localstorage
-    tasks = JSON.parse(storedTasks);
+    const storedTasks = localStorage.getItem("tasks");
+    const parsedTasks = JSON.parse(storedTasks);
+    if (Array.isArray(parsedTasks)) {
+      tasks = parsedTasks;
+    } else {
+      tasks = [];
+    }
     displayTasks();
-
+    updateDisplayVisibility();
   } catch (error) {
     alert(error.message);
+    tasks = [];
   }
-
 }
-
-window.onload = loadTasks;
