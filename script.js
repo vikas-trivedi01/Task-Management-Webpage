@@ -69,9 +69,9 @@ function displayTasks() {
       Priority: ${task.priority}<br>`;
 
     tasks_buttons.innerHTML = `
+      <button id="mark_cmp" class="${task.isCompleted ? 'hide' : 'hov btn'}" onclick="completeTask(${index})">Mark Complete</button>
       <button id="delete" class="btn" onclick="deleteTask(${index})">Delete</button><br>
-      <button id="edit" class="${task.isCompleted ? 'hide' : 'btn'}" onclick="editTask(${index})">Edit</button><br>
-      <button id="mark_cmp" class="${task.isCompleted ? 'hide' : 'hov btn'}" onclick="completeTask(${index})">Mark Complete</button>`;
+      <button id="edit" class="${task.isCompleted ? 'hide' : 'btn'}" onclick="editTask(${index})">Edit</button><br>`;
 
     tasks_buttons.className = "buttons";
     task_info.className = "task_info";
