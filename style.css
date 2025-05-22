@@ -153,10 +153,18 @@ h1 {
   color: rgb(18, 14, 14);
   transition: 0.7s;
 }
+
 .pin {
+  left: 87%;
+}
+
+.add-to-folder {
+  left: 83%;
+}
+
+.pin, .add-to-folder {
   position: relative;
   top: 20px;
-  left: 87%;
   color: #ffffff;
   background: #000000;
   font-size: medium;
@@ -164,16 +172,15 @@ h1 {
   border: 2px solid rgb(150, 169, 255);
   border-radius: 12px;
 }
-.pin:hover {
+.pin:hover, .add-to-folder:hover {
   transform: scale(1.2);
   transition: 1s;
   border-radius: 10px;
 }
 
-#filter {
+#filter, #refresh, #folder {
   position: relative;
   top: -34px;
-  left: 84%;
   color: #ffffff;
   background: #000000;
   font-size: medium;
@@ -181,6 +188,10 @@ h1 {
   border: 2px solid rgb(150, 169, 255);
   border-radius: 12px;
   cursor: pointer;
+}
+
+#filter {
+  left: 85%;
 }
 #filter:hover {
   transform: scale(1.2);
@@ -188,18 +199,17 @@ h1 {
 }
 
 #refresh {
-  position: relative;
-  top: -34px;
-  left: 85%;
-  color: #ffffff;
-  background: #000000;
-  font-size: medium;
-  padding: 0.5rem;
-  border: 2px solid rgb(150, 169, 255);
-  border-radius: 12px;
-  cursor: pointer;
+  left: 86%;
 }
 #refresh:hover {
+  transform: scale(1.2);
+  transition: 1s;
+}
+
+#folder {
+  left: 84%;
+}
+#folder:hover {
   transform: scale(1.2);
   transition: 1s;
 }
@@ -234,7 +244,7 @@ h1 {
   font-weight: 700;
 } 
 
-#folder-icon {
+.folder-icon {
   background-color: rgb(255, 255, 255);
   border-radius: 10px;
   padding-right: 8px;

@@ -8,6 +8,7 @@ window.onload = () => {
   document.getElementById("task-form").addEventListener("submit", addTask);
   document.getElementById("filter").addEventListener("click", filterTask);
   document.getElementById("refresh").addEventListener("click", refreshList);
+  document.getElementById("folder").addEventListener("click", addFolder);
 };
 
 let performedFilter = false;
@@ -98,11 +99,17 @@ function renderTask(task) {
   const task_info = document.createElement("div");
   const pin_icon = document.createElement("span");
   const pinButton = document.createElement("button");
+  const folder_icon = document.createElement("span");
+  const addToFolderButton = document.createElement("button");
 
   pinButton.innerHTML = `<i class="fas fa-thumbtack"></i>`;
+  addToFolderButton.innerHTML = `<i class="fa-solid fa-folder-closed"></i>`;
   pinButton.className = "pin";
+  addToFolderButton.className = "add-to-folder";
   pinButton.addEventListener("click", () => pinTask(index));
+  addToFolderButton.addEventListener("click", () => addTaskToFolder(index));
   pin_icon.appendChild(pinButton);
+  folder_icon.appendChild(addToFolderButton);
 
   task_elem.className = task.isCompleted ? "task-item completed" : "task-item";
   task_elem.innerHTML = `
@@ -128,7 +135,11 @@ function renderTask(task) {
       pinList.appendChild(task_info);
     }
   } else {
-    if (!task.isCompleted) task_info.appendChild(pin_icon);
+    if (!task.isCompleted) {
+      task_info.appendChild(pin_icon); 
+      task_info.appendChild(folder_icon);
+    }
+
     task_info.appendChild(task_elem);
     task_info.appendChild(tasks_buttons);
     taskList.appendChild(task_info);
@@ -211,4 +222,20 @@ function loadTasks() {
     alert(error.message);
     tasks = [];
   }
+}
+
+function addFolder() {
+  const foldersList = document.getElementById("folders-list");
+
+  const folderName = prompt("Enter folder name", "My tasks");
+
+  const folderElem = document.createElement("div");
+  folderElem.className = "folder_info";
+
+  folderElem.innerHTML = `
+          <img width="100" height="100" class="folder-icon" src="https://img.icons8.com/clouds/100/folder-invoices.png" alt="folder-invoices"/>  
+          <p class="folder-name">${folderName}</p>
+        `;
+
+  foldersList.appendChild(folderElem);
 }
