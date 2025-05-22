@@ -20,8 +20,8 @@
       <form class="task-form" id="task-form">
         <input
           type="text"
-          id="description"
-          placeholder="Task Description"
+          id="name"
+          placeholder="Task Name"
           required
         />
 
@@ -52,7 +52,8 @@
 
       <div id="task-list-header">
         <center><h1 style="display: block">Tasks</h1></center>
-        <button id="filter"><span><i class="fa-solid fa-sliders"></i></span></button>
+        <button id="filter" title="Apply filters"><span><i class="fa-solid fa-sliders"></i></span></button>
+        <button id="refresh" title="Remove filters"><span><i class="fa-solid fa-arrows-rotate"></i></span></button>
       </div>
       <br />
 

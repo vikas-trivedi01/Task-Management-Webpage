@@ -174,18 +174,35 @@ h1 {
 #filter {
   position: relative;
   top: -34px;
-  left: 87%;
+  left: 84%;
   color: #ffffff;
   background: #000000;
   font-size: medium;
   padding: 0.5rem;
   border: 2px solid rgb(150, 169, 255);
   border-radius: 12px;
+  cursor: pointer;
 }
 #filter:hover {
   transform: scale(1.2);
   transition: 1s;
-  border-radius: 10px;
+}
+
+#refresh {
+  position: relative;
+  top: -34px;
+  left: 85%;
+  color: #ffffff;
+  background: #000000;
+  font-size: medium;
+  padding: 0.5rem;
+  border: 2px solid rgb(150, 169, 255);
+  border-radius: 12px;
+  cursor: pointer;
+}
+#refresh:hover {
+  transform: scale(1.2);
+  transition: 1s;
 }
 
 #message{

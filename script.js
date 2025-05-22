@@ -7,21 +7,37 @@ window.onload = () => {
   updateDisplayVisibility();
   document.getElementById("task-form").addEventListener("submit", addTask);
   document.getElementById("filter").addEventListener("click", filterTask);
+  document.getElementById("refresh").addEventListener("click", refreshList);
 };
+
+let performedFilter = false;
 
 function filterTask() {
   document.getElementById("filter").addEventListener("click", () => {
-    const criteria = prompt("Enter sorting criteria", "High or Low");
+    const criteria = prompt("Enter sorting criteria", "High or Low or Completed");
 
     if (criteria.trim().toLowerCase() == "high" || criteria.trim().toLowerCase() == "low") {
       if (tasks.length > 0) {
         const filteredTasks = tasks.map((task, i) => ({ ...task, _index: i }))
           .filter(task => task.priority.trim().toLowerCase() == criteria.trim().toLowerCase());
-
+        performedFilter = true;
+        displayTasks(filteredTasks);
+      }
+    } else if(criteria.trim().toLowerCase() == "completed") {
+      if (tasks.length > 0) {
+        const filteredTasks = tasks.map((task, i) => ({ ...task, _index: i }))
+          .filter(task => task.isCompleted);
+        performedFilter = true;
         displayTasks(filteredTasks);
       }
     }
   });
+}
+
+function refreshList() {
+  if(performedFilter) {
+    displayTasks();
+  }
 }
 
 
@@ -33,24 +49,24 @@ function updateDisplayVisibility() {
 function addTask(e) {
   e.preventDefault();
 
-  const taskDescription = document.getElementById("description").value.trim();
+  const taskName = document.getElementById("name").value.trim();
   const taskDue = document.getElementById("due-date").value;
   const taskPriority = document.getElementById("priority").value;
 
-  if (!taskDescription || !taskDue) {
-    alert("Please enter both description and due date.");
+  if (!taskName || !taskDue) {
+    alert("Please enter both name and due date.");
     return;
   }
 
   tasks.push({
-    description: taskDescription,
+    name: taskName,
     due_date: taskDue,
     priority: taskPriority,
     isCompleted: false,
     isPinned: false,
   });
 
-  document.getElementById("description").value = "";
+  document.getElementById("name").value = "";
   document.getElementById("due-date").value = "";
   document.getElementById("priority").value = "Low";
 
@@ -90,7 +106,7 @@ function renderTask(task) {
 
   task_elem.className = task.isCompleted ? "task-item completed" : "task-item";
   task_elem.innerHTML = `
-    Task: ${task.description}<br>
+    Task: ${task.name}<br>
     Due Date: ${task.due_date}<br>
     Priority: ${task.priority}<br>`;
 
@@ -134,12 +150,12 @@ function completeTask(index) {
 }
 
 function editTask(index) {
-  const newDescription = prompt("Enter new task description", tasks[index].description);
+  const newName = prompt("Enter new task name", tasks[index].name);
   const newDate = prompt("Enter new task due date", tasks[index].due_date);
   const newPriority = prompt("Enter new task priority", tasks[index].priority);
 
-  if (newDescription && newDate && newPriority) {
-    tasks[index].description = newDescription;
+  if (newName && newDate && newPriority) {
+    tasks[index].name = newName;
     tasks[index].due_date = newDate;
     tasks[index].priority = newPriority;
     displayTasks();
