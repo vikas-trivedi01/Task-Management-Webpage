@@ -22,10 +22,9 @@ h1 {
   text-align: center;
   color: #333;
 }
-#task-list,#pinned-list {
+#task-list,#pinned-list,#folders-list {
   gap: 3rem;
   padding: 25px;
-  width: 225%;
   color: black;
   display: flex;
   flex-wrap: wrap;
@@ -36,7 +35,7 @@ h1 {
   margin-top: 1rem;
 }
 .task_info {
-  padding:  0px 20px;
+  padding: 20px;
   border-radius: 12px;
   background: linear-gradient(15deg, rgb(150, 169, 255), #00000062);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
@@ -213,4 +212,30 @@ h1 {
   width: 35%;
   padding: 17px 38px;
   margin-left: 33%;
+}
+
+
+.folder_info {
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgb(255, 255, 255);
+  transition: all 0.3s ease-in-out;
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 140px;
+  color: #fff;
+}
+
+.folder_info p {
+  align-self: center;
+  margin-top: 20px;
+  font-weight: 700;
+} 
+
+#folder-icon {
+  background-color: rgb(255, 255, 255);
+  border-radius: 10px;
+  padding-right: 8px;
 }
