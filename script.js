@@ -1,10 +1,29 @@
 let tasks = [];
+const pinList = document.getElementById("pinned-list");
+const taskList = document.getElementById("task-list");
 
 window.onload = () => {
   loadTasks();
   updateDisplayVisibility();
   document.getElementById("task-form").addEventListener("submit", addTask);
+  document.getElementById("filter").addEventListener("click", filterTask);
 };
+
+function filterTask() {
+  document.getElementById("filter").addEventListener("click", () => {
+    const criteria = prompt("Enter sorting criteria", "High or Low");
+
+    if (criteria.trim().toLowerCase() == "high" || criteria.trim().toLowerCase() == "low") {
+      if (tasks.length > 0) {
+        const filteredTasks = tasks.map((task, i) => ({ ...task, _index: i }))
+          .filter(task => task.priority.trim().toLowerCase() == criteria.trim().toLowerCase());
+
+        displayTasks(filteredTasks);
+      }
+    }
+  });
+}
+
 
 function updateDisplayVisibility() {
   const displayElem = document.getElementById("display");
@@ -40,9 +59,7 @@ function addTask(e) {
   updateDisplayVisibility();
 }
 
-function displayTasks() {
-  const pinList = document.getElementById("pinned-list");
-  const taskList = document.getElementById("task-list");
+function displayTasks(arr = null) {
   pinList.style.display = "none";
   document.getElementById("pinned-text").style.display = "none";
   pinListNotShown = true;
@@ -50,48 +67,56 @@ function displayTasks() {
   pinList.innerHTML = "";
   taskList.innerHTML = "";
 
-  tasks.forEach((task, index) => {
-    const task_elem = document.createElement("div");
-    const tasks_buttons = document.createElement("div");
-    const task_info = document.createElement("div");
-    const pin_icon = document.createElement("span");
-    const pinButton = document.createElement("button");
+  const source = arr === null
+    ? tasks.map((task, index) => ({ ...task, _index: index }))
+    : arr;
 
-    pinButton.innerHTML = `<i class="fas fa-thumbtack"></i>`;
-    pinButton.className = "pin";
-    pinButton.addEventListener("click", () => pinTask(index));
-    pin_icon.appendChild(pinButton);
+  source.forEach(renderTask);
+}
 
-    task_elem.className = task.isCompleted ? "task-item completed" : "task-item";
-    task_elem.innerHTML = `
-      Task: ${task.description}<br>
-      Due Date: ${task.due_date}<br>
-      Priority: ${task.priority}<br>`;
+function renderTask(task) {
+  const index = task._index;
 
-    tasks_buttons.innerHTML = `
-      <button id="mark_cmp" class="${task.isCompleted ? 'hide' : 'hov btn'}" onclick="completeTask(${index})">Mark Complete</button>
-      <button id="delete" class="btn" onclick="deleteTask(${index})">Delete</button><br>
-      <button id="edit" class="${task.isCompleted ? 'hide' : 'btn'}" onclick="editTask(${index})">Edit</button><br>`;
+  const task_elem = document.createElement("div");
+  const tasks_buttons = document.createElement("div");
+  const task_info = document.createElement("div");
+  const pin_icon = document.createElement("span");
+  const pinButton = document.createElement("button");
 
-    tasks_buttons.className = "buttons";
-    task_info.className = "task_info";
+  pinButton.innerHTML = `<i class="fas fa-thumbtack"></i>`;
+  pinButton.className = "pin";
+  pinButton.addEventListener("click", () => pinTask(index));
+  pin_icon.appendChild(pinButton);
 
-    if (task.isPinned) {
-      if(pinListNotShown) {
-        pinList.style.display = "block";
-        document.getElementById("pinned-text").style.display = "block";
-        pinListNotShown = false;
-        task_info.appendChild(task_elem);
-        task_info.appendChild(tasks_buttons);
-        pinList.appendChild(task_info);
-      }
-    } else {
-      task_info.appendChild(pin_icon);
+  task_elem.className = task.isCompleted ? "task-item completed" : "task-item";
+  task_elem.innerHTML = `
+    Task: ${task.description}<br>
+    Due Date: ${task.due_date}<br>
+    Priority: ${task.priority}<br>`;
+
+  tasks_buttons.innerHTML = `
+    <button id="mark_cmp" class="${task.isCompleted ? 'hide' : 'hov btn'}" onclick="completeTask(${index})">Mark Complete</button>
+    <button id="delete" class="btn" onclick="deleteTask(${index})">Delete</button><br>
+    <button id="edit" class="${task.isCompleted ? 'hide' : 'btn'}" onclick="editTask(${index})">Edit</button><br>`;
+
+  tasks_buttons.className = "buttons";
+  task_info.className = "task_info";
+
+  if (task.isPinned) {
+    if (pinListNotShown) {
+      pinList.style.display = "block";
+      document.getElementById("pinned-text").style.display = "block";
+      pinListNotShown = false;
       task_info.appendChild(task_elem);
       task_info.appendChild(tasks_buttons);
-      taskList.appendChild(task_info);
+      pinList.appendChild(task_info);
     }
-  });
+  } else {
+    if (!task.isCompleted) task_info.appendChild(pin_icon);
+    task_info.appendChild(task_elem);
+    task_info.appendChild(tasks_buttons);
+    taskList.appendChild(task_info);
+  }
 }
 
 function deleteTask(index) {

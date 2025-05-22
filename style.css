@@ -23,18 +23,20 @@ h1 {
   color: #333;
 }
 #task-list,#pinned-list {
-  gap: 1rem;
+  gap: 3rem;
   padding: 25px;
   width: 225%;
   color: black;
   display: flex;
+  flex-wrap: wrap;
+  width: 100%;
 }
 
 .tasks {
-  margin-top: 2rem;
+  margin-top: 1rem;
 }
 .task_info {
-  padding: 20px;
+  padding:  0px 20px;
   border-radius: 12px;
   background: linear-gradient(15deg, rgb(150, 169, 255), #00000062);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
@@ -60,9 +62,14 @@ h1 {
 }
 
 .completed {
-  background-color: #439e8c !important;
+  background-color: #03ffcd !important;
   text-decoration: line-through;
 }
+
+.task_info .completed {
+  margin-top: 30px;
+}
+
 .add {
   display: flex;
   justify-content: center;
@@ -115,11 +122,11 @@ h1 {
   flex-wrap: wrap;
 }
 .btn {
-  background-color: #0e1e0e;
+  background-color: #000000;
   color: rgb(217, 218, 208);
-  padding: 5px 20px;
+  padding: 10px 20px;
   border: none;
-  border-radius: 4px;
+  border-radius: 8px;
   cursor: pointer;
   font-size: 16px;
 }
@@ -163,6 +170,24 @@ h1 {
   transition: 1s;
   border-radius: 10px;
 }
+
+#filter {
+  position: relative;
+  top: -34px;
+  left: 87%;
+  color: #ffffff;
+  background: #000000;
+  font-size: medium;
+  padding: 0.5rem;
+  border: 2px solid rgb(150, 169, 255);
+  border-radius: 12px;
+}
+#filter:hover {
+  transform: scale(1.2);
+  transition: 1s;
+  border-radius: 10px;
+}
+
 #message{
   font-size:x-large;
   background-color: rgb(128, 240, 133);
