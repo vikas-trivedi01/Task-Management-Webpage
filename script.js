@@ -1,18 +1,41 @@
 let tasks = [];
 let folders = [];
 const pinList = document.getElementById("pinned-list");
-const taskList = document.getElementById("task-list");
+let taskList = document.getElementById("task-list");
 
-window.onload = () => {
-  loadTasks();
-  loadFolders();
-  document.getElementById("task-form").addEventListener("submit", addTask);
-  document.getElementById("filter").addEventListener("click", filterTask);
-  document.getElementById("refresh").addEventListener("click", refreshList);
-  document.getElementById("folder").addEventListener("click", addFolder);
-};
+if(window.location.pathname.endsWith("task.html")) {
+  window.onload = () => {
+    loadTasks("user");
+    loadFolders("user");
+    document.getElementById("task-form").addEventListener("submit", addTask);
+    document.getElementById("filter").addEventListener("click", filterTask);
+    document.getElementById("refresh").addEventListener("click", refreshList);
+    document.getElementById("folder").addEventListener("click", addFolder);
+  };
+}
 
-let performedFilter = false;
+  if (window.location.pathname.endsWith("folder.html")) {
+    const params = new URLSearchParams(window.location.search);
+    const folderIndex = params.get("folderIndex");
+
+    loadTasks("system");
+    loadFolders("system");
+    const folderTasks = tasks.filter( task => {
+       if(folders[folderIndex].folderTasks.includes(task.referenceId)) {
+        return task;
+       }
+    });
+
+    document.getElementById("folder-tasks-list").innerHTML += `
+                                                      <center><h2><u>Folder ~ ${folders[folderIndex].folderName}</u></h2></center>
+                                                      <div id="task-list"></div>
+                                                  `;
+
+    displayTasks(folderTasks, true);
+  }
+
+  
+  let performedFilter = false;
 
 function filterTask() {
   document.getElementById("filter").addEventListener("click", () => {
@@ -23,6 +46,7 @@ function filterTask() {
         const filteredTasks = tasks.map((task, i) => ({ ...task, _index: i }))
           .filter(task => task.priority.trim().toLowerCase() == criteria.trim().toLowerCase());
         performedFilter = true;
+
         displayTasks(filteredTasks);
       }
     } else if(criteria.trim().toLowerCase() == "completed") {
@@ -40,6 +64,9 @@ function refreshList() {
   if(performedFilter) {
     displayTasks();
   }
+  // tasks.forEach(task => console.log(typeof(task.referenceId)))
+  // folders.forEach(task => task.folderTasks.forEach((ref)=> console.log(typeof(ref))))
+
 }
 
 
@@ -84,13 +111,18 @@ function addTask(e) {
   updateTasksSectionDisplayVisibility();
 }
 
-function displayTasks(arr = null) {
-  pinList.style.display = "none";
-  document.getElementById("pinned-text").style.display = "none";
-  pinListNotShown = true;
+function displayTasks(arr = null, folderAccess = false) {
 
-  pinList.innerHTML = "";
-  taskList.innerHTML = "";
+  if(!folderAccess) {
+    pinList.style.display = "none";
+    document.getElementById("pinned-text").style.display = "none";
+    pinListNotShown = true;
+
+    pinList.innerHTML = "";
+    taskList.innerHTML = "";
+  }
+
+  taskList = document.getElementById("task-list");
 
   const source = arr === null
     ? tasks.map((task, index) => ({ ...task, _index: index }))
@@ -231,7 +263,8 @@ function debounce(func, delay) {
 const saveTasksDebounced = debounce(saveTasks, 1000);
 
 
-function loadTasks() {
+function loadTasks(loadingType) {
+  const updateUi = loadingType == "user" ? true : false;
   try {
     const storedTasks = localStorage.getItem("tasks");
     const parsedTasks = JSON.parse(storedTasks);
@@ -240,26 +273,31 @@ function loadTasks() {
     } else {
       tasks = [];
     }
-    displayTasks();
+   if(updateUi) {
+     displayTasks();
     updateTasksSectionDisplayVisibility();
+   }
   } catch (error) {
     alert(error.message);
     tasks = [];
   }
 }
 
-function loadFolders() {
+function loadFolders(loadingType) {
+  const updateUi = loadingType == "user" ? true : false;
   try {
     const storedFolders = localStorage.getItem("folders");
     const parsedFolders = JSON.parse(storedFolders);
     if (Array.isArray(parsedFolders)) {
       folders = parsedFolders;
+      if(updateUi) {
+        displayFolders();
+        updateFoldersSectionDisplayVisibility();
+      }
     } else {
       folders = [];
     }
 
-    displayFolders();
-    updateFoldersSectionDisplayVisibility();
   } catch (error) {
     alert(error.message);
     folders = [];
@@ -279,11 +317,12 @@ function addFolder() {
           <p class="folder-name">${folderName}</p>
         `;
 
-  foldersList.appendChild(folderElem);
   folders.push({
     folderName,
     folderTasks: []
   })
+        
+  foldersList.appendChild(folderElem);
 
   saveFolders();
   updateFoldersSectionDisplayVisibility();
@@ -323,23 +362,27 @@ function addTaskToFolder(index) {
   } else {
     alert("Please create a folder first to add tasks");
     return;
-  }
+  }``
 }
 
 function displayFolders() {
   const foldersList = document.getElementById("folders-list");
   
-  if(folders.length > 0) {
-    folders.forEach(folder => {
-      const folderElem = document.createElement("div");
-      folderElem.className = "folder_info";
-    
-      folderElem.innerHTML = `
-              <img width="100" height="100" class="folder-icon" src="https://img.icons8.com/clouds/100/folder-invoices.png" alt="folder-invoices"/>  
-              <p class="folder-name">${folder.folderName}</p>
-              `;
+  folders.forEach(folder => {
+    const folderElem = document.createElement("div");
+    folderElem.className = "folder_info";
+  
+    folderElem.innerHTML = `
+            <img width="100" height="100" class="folder-icon" src="https://img.icons8.com/clouds/100/folder-invoices.png" alt="folder-invoices"/>  
+            <p class="folder-name">${folder.folderName}</p>
+            `;
 
-      foldersList.appendChild(folderElem);
+    foldersList.appendChild(folderElem);
+  });
+
+  document.querySelectorAll(".folder_info").forEach((elem, index) => {
+    elem.addEventListener("click", () => {
+      window.location.href = `folder.html?folderIndex=${index}`;
     });
-  }
+  });
 }
