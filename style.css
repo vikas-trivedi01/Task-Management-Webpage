@@ -31,9 +31,10 @@ h1 {
   width: 100%;
 }
 
-.tasks {
+#tasks-section, #folders-section {
   margin-top: 1rem;
 }
+
 .task_info {
   padding: 20px;
   border-radius: 12px;
@@ -155,17 +156,17 @@ h1 {
 }
 
 .pin {
-  left: 87%;
+  left: 82%;
 }
 
 .add-to-folder {
-  left: 83%;
+  right: 14%;
 }
 
 .pin, .add-to-folder {
-  position: relative;
-  top: 20px;
   color: #ffffff;
+  position: relative;
+  bottom: 6px;
   background: #000000;
   font-size: medium;
   padding: 0.5rem;

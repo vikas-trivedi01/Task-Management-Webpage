@@ -1,10 +1,11 @@
 let tasks = [];
+let folders = [];
 const pinList = document.getElementById("pinned-list");
 const taskList = document.getElementById("task-list");
 
 window.onload = () => {
   loadTasks();
-  updateDisplayVisibility();
+  loadFolders();
   document.getElementById("task-form").addEventListener("submit", addTask);
   document.getElementById("filter").addEventListener("click", filterTask);
   document.getElementById("refresh").addEventListener("click", refreshList);
@@ -42,9 +43,14 @@ function refreshList() {
 }
 
 
-function updateDisplayVisibility() {
-  const displayElem = document.getElementById("display");
+function updateTasksSectionDisplayVisibility() {
+  const displayElem = document.getElementById("tasks-section");
   displayElem.style.display = tasks.length > 0 ? "block" : "none";
+}
+
+function updateFoldersSectionDisplayVisibility() {
+  const displayElem = document.getElementById("folders-section");
+  displayElem.style.display = folders.length > 0 ? "block" : "none";
 }
 
 function addTask(e) {
@@ -65,6 +71,7 @@ function addTask(e) {
     priority: taskPriority,
     isCompleted: false,
     isPinned: false,
+    refereceId: Math.floor(Math.random() * 100000) + 1
   });
 
   document.getElementById("name").value = "";
@@ -73,7 +80,7 @@ function addTask(e) {
 
   displayTasks();
   saveTasksDebounced();
-  updateDisplayVisibility();
+  updateTasksSectionDisplayVisibility();
 }
 
 function displayTasks(arr = null) {
@@ -97,19 +104,16 @@ function renderTask(task) {
   const task_elem = document.createElement("div");
   const tasks_buttons = document.createElement("div");
   const task_info = document.createElement("div");
-  const pin_icon = document.createElement("span");
   const pinButton = document.createElement("button");
-  const folder_icon = document.createElement("span");
   const addToFolderButton = document.createElement("button");
 
   pinButton.innerHTML = `<i class="fas fa-thumbtack"></i>`;
-  addToFolderButton.innerHTML = `<i class="fa-solid fa-folder-closed"></i>`;
+  addToFolderButton.innerHTML = `<i class="fa-solid fa-folder"></i>`;
   pinButton.className = "pin";
   addToFolderButton.className = "add-to-folder";
   pinButton.addEventListener("click", () => pinTask(index));
   addToFolderButton.addEventListener("click", () => addTaskToFolder(index));
-  pin_icon.appendChild(pinButton);
-  folder_icon.appendChild(addToFolderButton);
+  // folder_icon.appendChild(addToFolderButton);
 
   task_elem.className = task.isCompleted ? "task-item completed" : "task-item";
   task_elem.innerHTML = `
@@ -136,8 +140,8 @@ function renderTask(task) {
     }
   } else {
     if (!task.isCompleted) {
-      task_info.appendChild(pin_icon); 
-      task_info.appendChild(folder_icon);
+      task_info.appendChild(pinButton); 
+      task_info.appendChild(addToFolderButton);
     }
 
     task_info.appendChild(task_elem);
@@ -150,7 +154,7 @@ function deleteTask(index) {
   tasks.splice(index, 1);
   displayTasks();
   saveTasksDebounced();
-  updateDisplayVisibility();
+  updateTasksSectionDisplayVisibility();
 }
 
 function completeTask(index) {
@@ -207,6 +211,7 @@ function debounce(func, delay) {
 
 const saveTasksDebounced = debounce(saveTasks, 1000);
 
+
 function loadTasks() {
   try {
     const storedTasks = localStorage.getItem("tasks");
@@ -217,10 +222,28 @@ function loadTasks() {
       tasks = [];
     }
     displayTasks();
-    updateDisplayVisibility();
+    updateTasksSectionDisplayVisibility();
   } catch (error) {
     alert(error.message);
     tasks = [];
+  }
+}
+
+function loadFolders() {
+  try {
+    const storedFolders = localStorage.getItem("folders");
+    const parsedFolders = JSON.parse(storedFolders);
+    if (Array.isArray(parsedFolders)) {
+      folders = parsedFolders;
+    } else {
+      folders = [];
+    }
+
+    displayFolders();
+    updateFoldersSectionDisplayVisibility();
+  } catch (error) {
+    alert(error.message);
+    folders = [];
   }
 }
 
@@ -228,7 +251,7 @@ function addFolder() {
   const foldersList = document.getElementById("folders-list");
 
   const folderName = prompt("Enter folder name", "My tasks");
-
+  
   const folderElem = document.createElement("div");
   folderElem.className = "folder_info";
 
@@ -238,4 +261,61 @@ function addFolder() {
         `;
 
   foldersList.appendChild(folderElem);
+  folders.push({
+    folderName,
+    folderTasks: []
+  })
+
+  localStorage.setItem("folders", JSON.stringify(folders));
+  updateFoldersSectionDisplayVisibility();
+}
+
+function addTaskToFolder(index) {
+  let folderName;
+  if(folders.length > 0 ) {
+    folderName = prompt("Enter folder name to add this task to it", folders[0].folderName);
+
+    const objIndex = folders.findIndex(folder => folder.folderName === folderName);
+    
+    if(objIndex != -1) {
+    folders.map((folder, folderIndex) => {
+      if(folderIndex == objIndex) {
+        folder.folderTasks.push(tasks[index].refereceId);
+      }
+      return folder;
+    });
+
+    // folders = [...folders, (folder, index) => index == objIndex ? folder.folderTasks.push(tasks[index].refereceId) : folder];
+
+    if(localStorage.getItem("folders")) {
+      localStorage.setItem("folders", JSON.stringify(folders));
+    }
+
+  } else {
+    alert("No such folder exists, please create one to add tasks to it");
+  }
+
+
+  } else {
+    alert("Please create a folder first to add tasks");
+    return;
+  }
+}
+
+function displayFolders() {
+  const foldersList = document.getElementById("folders-list");
+  
+  if(folders.length > 0) {
+    folders.forEach(folder => {
+      const folderElem = document.createElement("div");
+      folderElem.className = "folder_info";
+    
+      folderElem.innerHTML = `
+              <img width="100" height="100" class="folder-icon" src="https://img.icons8.com/clouds/100/folder-invoices.png" alt="folder-invoices"/>  
+              <p class="folder-name">${folder.folderName}</p>
+              `;
+
+      foldersList.appendChild(folderElem);
+    });
+  }
 }
