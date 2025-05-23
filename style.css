@@ -237,6 +237,7 @@ h1 {
   justify-content: space-between;
   width: 140px;
   color: #fff;
+  cursor: pointer;
 }
 
 .folder_info p {

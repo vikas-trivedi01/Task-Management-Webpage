@@ -71,7 +71,8 @@ function addTask(e) {
     priority: taskPriority,
     isCompleted: false,
     isPinned: false,
-    refereceId: Math.floor(Math.random() * 100000) + 1
+    isInFolder: false,
+    referenceId: Math.floor(Math.random() * 100000) + 1
   });
 
   document.getElementById("name").value = "";
@@ -113,7 +114,6 @@ function renderTask(task) {
   addToFolderButton.className = "add-to-folder";
   pinButton.addEventListener("click", () => pinTask(index));
   addToFolderButton.addEventListener("click", () => addTaskToFolder(index));
-  // folder_icon.appendChild(addToFolderButton);
 
   task_elem.className = task.isCompleted ? "task-item completed" : "task-item";
   task_elem.innerHTML = `
@@ -138,7 +138,14 @@ function renderTask(task) {
       task_info.appendChild(tasks_buttons);
       pinList.appendChild(task_info);
     }
-  } else {
+  } 
+  else if(task.isInFolder) {
+      task_info.appendChild(pinButton); 
+      task_info.appendChild(task_elem);
+      task_info.appendChild(tasks_buttons);
+      taskList.appendChild(task_info);
+  }
+  else {
     if (!task.isCompleted) {
       task_info.appendChild(pinButton); 
       task_info.appendChild(addToFolderButton);
@@ -151,7 +158,16 @@ function renderTask(task) {
 }
 
 function deleteTask(index) {
+  folders = folders.map(folder => {
+    folder.folderTasks = folder.folderTasks.filter(folderTaskReferenceId => {
+      //  folders.splice(folder.folderTasks.findIndex(folderTaskReference => folderTaskReference == folderTaskReferenceId),1)
+       folderTaskReferenceId !== tasks[index].referenceId
+      }); 
+      return folder;
+    });
+    
   tasks.splice(index, 1);
+  saveFolders();
   displayTasks();
   saveTasksDebounced();
   updateTasksSectionDisplayVisibility();
@@ -199,6 +215,9 @@ function pinTask(index) {
 
 function saveTasks() {
   localStorage.setItem("tasks", JSON.stringify(tasks));
+}
+function saveFolders() {
+  localStorage.setItem("folders", JSON.stringify(folders));
 }
 
 function debounce(func, delay) {
@@ -266,7 +285,7 @@ function addFolder() {
     folderTasks: []
   })
 
-  localStorage.setItem("folders", JSON.stringify(folders));
+  saveFolders();
   updateFoldersSectionDisplayVisibility();
 }
 
@@ -280,16 +299,21 @@ function addTaskToFolder(index) {
     if(objIndex != -1) {
     folders.map((folder, folderIndex) => {
       if(folderIndex == objIndex) {
-        folder.folderTasks.push(tasks[index].refereceId);
+        folder.folderTasks.push(tasks[index].referenceId);
+        tasks[index].isInFolder = true;
       }
       return folder;
     });
 
     // folders = [...folders, (folder, index) => index == objIndex ? folder.folderTasks.push(tasks[index].refereceId) : folder];
 
+
     if(localStorage.getItem("folders")) {
-      localStorage.setItem("folders", JSON.stringify(folders));
+      saveFolders();
+      displayTasks();
+      saveTasksDebounced();
     }
+
 
   } else {
     alert("No such folder exists, please create one to add tasks to it");
