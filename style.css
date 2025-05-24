@@ -159,11 +159,11 @@ h1 {
   left: 82%;
 }
 
-.add-to-folder {
+.add-to-folder, .remove-from-folder {
   right: 14%;
 }
 
-.pin, .add-to-folder {
+.pin, .add-to-folder, .remove-from-folder {
   color: #ffffff;
   position: relative;
   bottom: 6px;
@@ -172,11 +172,16 @@ h1 {
   padding: 0.5rem;
   border: 2px solid rgb(150, 169, 255);
   border-radius: 12px;
+  cursor: pointer;
 }
-.pin:hover, .add-to-folder:hover {
+.pin:hover, .add-to-folder:hover, .remove-from-folder:hover {
   transform: scale(1.2);
   transition: 1s;
   border-radius: 10px;
+}
+
+.remove-from-folder {
+  font-size: large;
 }
 
 #filter, #refresh, #folder {
